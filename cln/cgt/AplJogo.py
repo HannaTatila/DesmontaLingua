@@ -15,7 +15,7 @@ class AplJogo:
         return ["O", "sol", "eh", "amarelo"]
 
     def captura_relacoes(self):
-        return [ (1,2) , (2,3) , (4,3)]
+        return [ (0,1) , (1,2) , (3,2)]
 
     def gera_estrutura_frase(self):
         estrutura = []
