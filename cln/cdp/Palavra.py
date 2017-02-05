@@ -7,9 +7,14 @@ class Palavra:
         self.texto = ""
         self.ativo = False
         self.imagemrect = ""
+        self.botao = ""
+        self.posicaoxbotao = 0
 
     def set_texto(self, palavra):
         self.texto = palavra
+
+    def set_botao(self, botao):
+        self.botao = botao
 
     def set_ativo(self, ativo):
         self.ativo = ativo
