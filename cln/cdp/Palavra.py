@@ -25,5 +25,8 @@ class Palavra:
     def set_id(self, id):
         self.id = id
 
-    def is_clicked(self):
+    def foi_clicada(self):
         return pygame.mouse.get_pressed()[0] and self.imagemrect.collidepoint(pygame.mouse.get_pos())
+
+    def foi_detectada(self):
+        return pygame.MOUSEBUTTONUP and self.imagemrect.collidepoint(pygame.mouse.get_pos())

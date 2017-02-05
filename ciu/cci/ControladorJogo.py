@@ -19,6 +19,7 @@ class ControladorJogo:
         self.telajogo = Tela()
         self.music = True
         self.posicaobotaorelacoes = 0
+        self.idpalavraorigem = -1
         self.posicaoy = (self.telajogo.tamanhotelay / 5 * 4)
 
     @staticmethod
@@ -52,29 +53,40 @@ class ControladorJogo:
         for palavra in self.objpalavras:
             largura = self.calcula_largura_botao(palavra.texto) #TODO: pensar melhor nesse metodo repetido aqui
             botao = self.cria_botao(palavra.texto, (218, 165, 32)) #cor goldenrod
+
             palavra.set_botao(botao)
             palavra.posicaoxbotao = posicaox
-
-            self.telajogo.exibe_imagem(botao, Posicao(posicaox, self.posicaoy))
             imagemrect = botao.get_rect().move(posicaox, self.posicaoy)
             palavra.set_imagemrect(imagemrect)
-            self.telajogo.exibe_texto(palavra.texto, self.TAM_FONTE_TEXTO, Posicao(posicaox + 10, self.posicaoy + 10))
+
+            self.imprimir_botao(palavra.id, botao)
 
             posicaox += largura + 10
 
-        self.posicaobotaorelacoes = posicaox
-
-        self.exibir_botao_qtd_relacoes(posicaox)
+        self.posicaobotaorelacoes = posicaox;
+        self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
 
     def exibir_botao_qtd_relacoes(self, posicaox):
         setarelacoes = self.get_imagem("setarelacoes.gif")
         self.telajogo.exibe_imagem(setarelacoes, Posicao(posicaox + 10, self.posicaoy - 50))
         self.telajogo.exibe_texto(str(self.apljogo.qtdrelacaoes), self.TAM_FONTE_TEXTO,Posicao(posicaox + 27, self.posicaoy - 35))
 
+    def imprimir_botao(self, idpalavraclicada, botao):
+        self.telajogo.exibe_imagem(botao, Posicao(self.objpalavras[idpalavraclicada].posicaoxbotao, self.posicaoy))
+        self.telajogo.exibe_texto(self.objpalavras[idpalavraclicada].texto, self.TAM_FONTE_TEXTO,
+                                  Posicao(self.objpalavras[idpalavraclicada].posicaoxbotao + 10, self.posicaoy + 10))
+
     def destacar_botao(self, idpalavraclicada):
         botao = self.cria_botao(self.objpalavras[idpalavraclicada].texto, (255,105,180)) #cor HotPink
-        self.telajogo.exibe_imagem(botao, Posicao(self.objpalavras[idpalavraclicada].posicaoxbotao, self.posicaoy))
-        self.telajogo.exibe_texto(self.objpalavras[idpalavraclicada].texto, self.TAM_FONTE_TEXTO, Posicao(self.objpalavras[idpalavraclicada].posicaoxbotao + 10, self.posicaoy + 10))
+        self.imprimir_botao(idpalavraclicada, botao)
+
+    def destacar_botao_clicado(self, idpalavraclicada):
+        botao = self.cria_botao(self.objpalavras[idpalavraclicada].texto, (220,20,60)) #cor Crimson
+        self.imprimir_botao(idpalavraclicada, botao)
+
+    def restaurar_botao(self, idpalavraclicada):
+        botao = self.cria_botao(self.objpalavras[idpalavraclicada].texto, (218, 165, 32)) #cor goldenrod
+        self.imprimir_botao(idpalavraclicada, botao)
 
     def verifica_relacao(self, idpalavradestino):
         relacaoentrada = (self.idpalavraorigem, idpalavradestino)
@@ -83,25 +95,34 @@ class ControladorJogo:
             if self.relacoes[idrelacao] == relacaoentrada:
                 self.apljogo.qtdrelacaoes -= 1
                 self.relacoes.pop(idrelacao)
+                self.telajogo.exibe_som(self.get_som("acerto.wav"))
                 return True
-            else:
-                pass
-                # TODO: destacar de vermelho botoes da relacao incorreta
 
+        self.telajogo.exibe_som(self.get_som("erro.wav"))
+        # TODO: destacar de vermelho botoes da relacao incorreta
         return False
 
-    def verifica_clique_mouse(self):
+    def controla_cor_botao_visitado(self, palavraobj):
+        if palavraobj.foi_detectada() and palavraobj.id != self.idpalavraorigem:
+            self.destacar_botao(palavraobj.id)
+        elif pygame.MOUSEBUTTONDOWN and palavraobj.id != self.idpalavraorigem:
+            self.restaurar_botao(palavraobj.id)
 
+    def verifica_evento_mouse(self):
         for palavraobj in self.objpalavras:
-            if palavraobj.is_clicked():
+            self.controla_cor_botao_visitado(palavraobj)
+
+            if palavraobj.foi_clicada():
                 if not (self.existepalavraclicada):
                     self.idpalavraorigem = palavraobj.id
                     self.existepalavraclicada = True
+                    self.destacar_botao_clicado(self.idpalavraorigem)
                 else:
                     print("Relacao entre palavra" + str(self.idpalavraorigem) + " e " + str(palavraobj.id) + " !")
                     self.existepalavraclicada = False
-
+                    self.restaurar_botao(self.idpalavraorigem)
                     self.verifica_relacao(palavraobj.id)
+                    self.idpalavraorigem = -1
 
 
     def jogo(self):
@@ -121,12 +142,9 @@ class ControladorJogo:
             observable.verifica_evento()
             #TODO: geracombinacoesrelacoes()
 
-            self.verifica_clique_mouse()
+            self.verifica_evento_mouse()
 
-            if self.existepalavraclicada:
-                self.destacar_botao(self.idpalavraorigem)
-            else:
-                self.exibir_botoes_palavras()
+            self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
 
             pygame.display.flip()
             self.apljogo.clock.tick(10)
