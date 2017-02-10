@@ -76,6 +76,7 @@ class ControladorJogo:
         self.telajogo.exibe_texto(self.objpalavras[idpalavraclicada].texto, self.TAM_FONTE_TEXTO,
                                   Posicao(self.objpalavras[idpalavraclicada].posicaoxbotao + 10, self.posicaoy + 10))
 
+    #TODO: os tres proximos metodos virarao um so, recebendo como prametros o id e a cor
     def destacar_botao(self, idpalavraclicada):
         botao = self.cria_botao(self.objpalavras[idpalavraclicada].texto, (255,105,180)) #cor HotPink
         self.imprimir_botao(idpalavraclicada, botao)
@@ -89,18 +90,43 @@ class ControladorJogo:
         self.imprimir_botao(idpalavraclicada, botao)
 
     def verifica_relacao(self, idpalavradestino):
-        relacaoentrada = (self.idpalavraorigem, idpalavradestino)
+        relacaoentrada = (self.idpalavraorigem, idpalavradestino, 0)
 
         for idrelacao in range(len(self.relacoes)):
             if self.relacoes[idrelacao] == relacaoentrada:
                 self.apljogo.qtdrelacaoes -= 1
-                self.relacoes.pop(idrelacao)
+                #self.relacoes.pop(idrelacao)
+                self.relacoes[idrelacao] = (self.relacoes[idrelacao][0], self.relacoes[idrelacao][1], 1)
                 self.telajogo.exibe_som(self.get_som("acerto.wav"))
                 return True
 
         self.telajogo.exibe_som(self.get_som("erro.wav"))
         # TODO: destacar de vermelho botoes da relacao incorreta
         return False
+
+    def busca_estado_relacoes(self):
+        estado = []
+        teste = ""
+        for relacao in self.relacoes:
+            estado.append(relacao[2])
+            teste += str(relacao[2])
+        return teste
+
+
+    def altera_cenario(self):
+        estado = self.busca_estado_relacoes()
+        for cenario in self.cenario:
+            valido = True
+            for id in range(len(estado)):
+                if cenario[0][id] == "1" and estado[id] == "0":
+                    valido = False
+                    break
+
+            if valido:
+                imagem = self.get_imagem(cenario[1])
+                self.telajogo.exibe_imagem(imagem, Posicao(0, 0))
+
+
 
     def controla_cor_botao_visitado(self, palavraobj):
         if palavraobj.foi_detectada() and palavraobj.id != self.idpalavraorigem:
@@ -121,7 +147,9 @@ class ControladorJogo:
                     print("Relacao entre palavra" + str(self.idpalavraorigem) + " e " + str(palavraobj.id) + " !")
                     self.existepalavraclicada = False
                     self.restaurar_botao(self.idpalavraorigem)
-                    self.verifica_relacao(palavraobj.id)
+                    if self.verifica_relacao(palavraobj.id):
+                        self.altera_cenario()
+                        pass
                     self.idpalavraorigem = -1
 
 
@@ -132,15 +160,15 @@ class ControladorJogo:
 
         self.objpalavras = self.apljogo.gera_estrutura_frase()
         self.relacoes = self.apljogo.captura_relacoes()
+        self.cenario = self.apljogo.captura_relacao_cenario()
         self.apljogo.qtdrelacaoes = len(self.relacoes)
 
         self.exibir_botoes_palavras()
 
         self.existepalavraclicada = False
-        continua = True
-        while continua:
+        self.continua = True
+        while self.continua:
             observable.verifica_evento()
-            #TODO: geracombinacoesrelacoes()
 
             self.verifica_evento_mouse()
 
@@ -155,8 +183,8 @@ class ControladorJogo:
     # a classe ControlodorJogo (q eh um observador)recebe atualizacao pq a classe Observada ObservableEventosTeclado
     # capturou um evento
     def update(self, observable):
-        if observable.cima:
-            pass
+        if observable.enter:
+            self.continua = False
         elif observable.soltoubaixo:
             pass
 
