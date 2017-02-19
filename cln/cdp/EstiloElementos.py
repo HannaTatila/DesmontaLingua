@@ -60,7 +60,7 @@ class EstiloElementos:
 
     @staticmethod
     def posicao_titulo_jogo():
-        return Posicao(150, 140)
+        return Posicao(250, 30)
 
     @staticmethod
     def posicao_mensagem_cadastro():

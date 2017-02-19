@@ -1,4 +1,4 @@
-
+from ciu.cci.ControladorCadastroFrase import ControladorCadastroFrase
 from ciu.cci.ControleMenu.EstadoMenu import EstadoMenu
 
 __author__ = 'dell'
@@ -16,9 +16,7 @@ class EstadoMenuRanking(EstadoMenu):
         self.menu.set_estado(self.menu.estadomenuiniciar)
 
     def selecionar_valor(self):
-        pass
-        """
-        controladorranking = ControladorRanking()
-        controladorranking.retorna_ranking()
-        self.menu.aguarda_confirmacao()
-        """
+        controladorcadastro = ControladorCadastroFrase()
+        controladorcadastro.cadastra_frase()
+        #self.menu.aguarda_confirmacao()
+

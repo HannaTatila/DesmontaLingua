@@ -13,6 +13,7 @@ class ObservableEventosTeclado:
         self.soltoubaixo = False
         self.direita = False
         self.esquerda = False
+        self.clicou = False
 
     def add_observer(self, observer):
         self.observers.append(observer)
@@ -42,6 +43,8 @@ class ObservableEventosTeclado:
                     self.esquerda = True
             elif (event.type == pygame.KEYUP) and (event.key == pygame.K_UP):
                     self.soltoubaixo = True
+        if pygame.mouse.get_pressed()[0]:
+            self.clicou = True
         self.notifica_observador()
 
     def inicializa_variaveis(self):
@@ -51,3 +54,4 @@ class ObservableEventosTeclado:
         self.soltoubaixo = False
         self.direita = False
         self.esquerda = False
+        self.clicou = False

@@ -14,15 +14,16 @@ _author__ = 'Hanna'
 
 
 class ControladorMenu():
-    POSICAOX_SETA = 245
-    POSICAOY_SETA = 260
-    POSICAOX_OPCAO_MENU = 302
+    POSICAOX_SETA = 345
+    POSICAOY_SETA = 265
+    POSICAOX_OPCAO_MENU = 400
     POSICAOY_OPCAO_MENU = 280
     DISTANCIA_OPCAO_MENU = 40
     TAMANHO_OPCAO_MENU_PADRAO = 30
     TAMANHO_OPCAO_MENU_SELECAO = 40
     COR_PRETO = (0, 0, 0)
     COR_CINZA = (80, 80, 80)
+    COR_VERDE = (0, 128, 128)
 
     def __init__(self):
         pygame.init()
@@ -36,8 +37,9 @@ class ControladorMenu():
         return pygame.image.load(os.path.join(CaminhoRecursos.caminho_imagens(), nomeimagem))
 
     def exibir_tela_menu(self):
-        imagemfundomenu = self.get_imagem("fundomenu.jpg")
-        self.telamenu.exibe_imagem(imagemfundomenu, EstiloElementos.posicao_imagem_fundo())
+        #imagemfundomenu = self.get_imagem("fundomenu.jpg")
+        #self.telamenu.exibe_imagem(imagemfundomenu, EstiloElementos.posicao_imagem_fundo())
+        self.telamenu.telajogo.fill((255, 255, 255))
         imagemfundomenu = self.get_imagem("titulojogo.png")
         self.telamenu.exibe_imagem(imagemfundomenu, EstiloElementos.posicao_titulo_jogo())
 
@@ -48,12 +50,12 @@ class ControladorMenu():
             cor = self.COR_CINZA
             if id + 1 == menuselecao:
                 tam = self.TAMANHO_OPCAO_MENU_SELECAO
-                cor = self.COR_PRETO
+                cor = self.COR_VERDE
             self.telamenu.exibe_texto_menu(opcao, tam, cor, Posicao(self.POSICAOX_OPCAO_MENU, self.POSICAOY_OPCAO_MENU + alteraposicao))
             alteraposicao = alteraposicao + self.DISTANCIA_OPCAO_MENU
 
     def manipula_seta(self, menuselecao):
-        imagemseta = self.get_imagem("seta.png")
+        imagemseta = self.get_imagem("seta.gif")
         self.telamenu.exibe_imagem(imagemseta, Posicao(self.POSICAOX_SETA, self.POSICAOY_SETA + 40 * (menuselecao - 1)))
 
     def update(self, observable):
@@ -82,5 +84,4 @@ class ControladorMenu():
             pygame.display.flip()
 
         #self.controladorjogo.jogo(self.menu.estadomenuiniciar.jogador)
-        print("voltou p controlador menu")
 

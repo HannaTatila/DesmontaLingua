@@ -1,10 +1,14 @@
 import os
 import pygame
+import PIL
+from PIL import Image
 from ciu.cih.EventosTeclado import ObservableEventosTeclado
 from ciu.cih.Tela import Tela
 from cln.cgt.AplJogo import AplJogo
 from principal.CaminhoRecursos import CaminhoRecursos
 from cln.cdp.Posicao import Posicao
+from cln.cdp.Seta import Seta
+
 
 __author__ = 'Hanna'
 
@@ -21,6 +25,7 @@ class ControladorJogo:
         self.posicaobotaorelacoes = 0
         self.idpalavraorigem = -1
         self.posicaoy = (self.telajogo.tamanhotelay / 5 * 4)
+        self.listasetas = []
 
     @staticmethod
     def get_imagem(nomeimagem):
@@ -36,6 +41,28 @@ class ControladorJogo:
 
     def exibir_musica(self, musica):
         self.telajogo.exibe_musica(CaminhoRecursos.caminho_musicas(), musica)
+
+    def redimensionar_imagem(self, wsize):
+        hsize = 75
+        img = self.get_imagem("relacao.png") #os.path.join(CaminhoRecursos.caminho_imagens(), "relacao.png")
+        img = pygame.transform.scale(img, (wsize + 30, hsize))
+        #img = PIL.Image.open(caminhoimagem)
+        #img = pygame.image.fromstring(img.tobytes(), img.size, img.mode)
+        # img.thumbnail((wsize + 20, hsize), Image.ANTIALIAS)
+        return img
+
+    def exibir_seta_relacao(self, wsize, posicaox, direcaonormal):
+        pygameImage = self.redimensionar_imagem(wsize)
+
+        if not direcaonormal:
+            pygameImage = pygame.transform.flip(pygameImage, True, False)
+
+        self.telajogo.exibe_imagem(pygameImage, Posicao(posicaox, self.posicaoy - 60))
+
+    def exibir_botao_voltar_menu(self):
+        botao = self.get_imagem("voltar.png")
+        self.telajogo.exibe_imagem(botao, Posicao(15, 15))
+        self.rectbotaovoltar = botao.get_rect().move(15, 15)
 
     def calcula_largura_botao(self, palavra):
         tamanhopalavra = len(palavra)
@@ -63,7 +90,7 @@ class ControladorJogo:
 
             posicaox += largura + 10
 
-        self.posicaobotaorelacoes = posicaox;
+        self.posicaobotaorelacoes = posicaox
         self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
 
     def exibir_botao_qtd_relacoes(self, posicaox):
@@ -76,7 +103,7 @@ class ControladorJogo:
         self.telajogo.exibe_texto(self.objpalavras[idpalavraclicada].texto, self.TAM_FONTE_TEXTO,
                                   Posicao(self.objpalavras[idpalavraclicada].posicaoxbotao + 10, self.posicaoy + 10))
 
-    #TODO: os tres proximos metodos virarao um so, recebendo como prametros o id e a cor
+    #TODO: os tres proximos metodos virarao um so, recebendo como prametro id e cor
     def destacar_botao(self, idpalavraclicada):
         botao = self.cria_botao(self.objpalavras[idpalavraclicada].texto, (255,105,180)) #cor HotPink
         self.imprimir_botao(idpalavraclicada, botao)
@@ -105,17 +132,16 @@ class ControladorJogo:
         return False
 
     def busca_estado_relacoes(self):
-        estado = []
-        teste = ""
+        estado = ""
         for relacao in self.relacoes:
-            estado.append(relacao[2])
-            teste += str(relacao[2])
-        return teste
-
+            estado += str(relacao[2])
+        return estado
 
     def altera_cenario(self):
         estado = self.busca_estado_relacoes()
         for cenario in self.cenario:
+            print("Cenarioo")
+            print cenario
             valido = True
             for id in range(len(estado)):
                 if cenario[0][id] == "1" and estado[id] == "0":
@@ -126,13 +152,28 @@ class ControladorJogo:
                 imagem = self.get_imagem(cenario[1])
                 self.telajogo.exibe_imagem(imagem, Posicao(0, 0))
 
-
-
     def controla_cor_botao_visitado(self, palavraobj):
         if palavraobj.foi_detectada() and palavraobj.id != self.idpalavraorigem:
             self.destacar_botao(palavraobj.id)
         elif pygame.MOUSEBUTTONDOWN and palavraobj.id != self.idpalavraorigem:
             self.restaurar_botao(palavraobj.id)
+
+    def incrementa_lista_setas(self, wsize, posicaox, direcaonormal):
+        seta = Seta()
+        seta.set_largura(wsize)
+        seta.set_posicaox(posicaox)
+        seta.set_direcao_normal(direcaonormal)
+        self.listasetas.append(seta)
+
+    def manipula_seta_relacao(self, idorigem, iddestino):
+        wsize = abs(self.objpalavras[iddestino].posicaoxbotao - self.objpalavras[idorigem].posicaoxbotao)
+        posicaosaidaseta = idorigem
+        issequencial = iddestino > idorigem
+        if (not issequencial):
+            posicaosaidaseta = iddestino
+
+        self.exibir_seta_relacao(wsize, self.objpalavras[posicaosaidaseta].posicaoxbotao, issequencial)
+        self.incrementa_lista_setas(wsize, self.objpalavras[posicaosaidaseta].posicaoxbotao, issequencial)
 
     def verifica_evento_mouse(self):
         for palavraobj in self.objpalavras:
@@ -144,12 +185,13 @@ class ControladorJogo:
                     self.existepalavraclicada = True
                     self.destacar_botao_clicado(self.idpalavraorigem)
                 else:
-                    print("Relacao entre palavra" + str(self.idpalavraorigem) + " e " + str(palavraobj.id) + " !")
+                    #print("Relacao entre palavra" + str(self.idpalavraorigem) + " e " + str(palavraobj.id) + " !")
                     self.existepalavraclicada = False
                     self.restaurar_botao(self.idpalavraorigem)
                     if self.verifica_relacao(palavraobj.id):
                         self.altera_cenario()
-                        pass
+                        self.manipula_seta_relacao(self.idpalavraorigem, palavraobj.id)
+
                     self.idpalavraorigem = -1
 
 
@@ -169,10 +211,12 @@ class ControladorJogo:
         self.continua = True
         while self.continua:
             observable.verifica_evento()
-
             self.verifica_evento_mouse()
-
             self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
+            self.exibir_botao_voltar_menu()
+
+            for seta in self.listasetas:
+                self.exibir_seta_relacao(seta.largura, seta.posicaox, seta.direcaonormal)
 
             pygame.display.flip()
             self.apljogo.clock.tick(10)
@@ -183,10 +227,8 @@ class ControladorJogo:
     # a classe ControlodorJogo (q eh um observador)recebe atualizacao pq a classe Observada ObservableEventosTeclado
     # capturou um evento
     def update(self, observable):
-        if observable.enter:
+        if observable.clicou and self.rectbotaovoltar.collidepoint(pygame.mouse.get_pos()):
             self.continua = False
-        elif observable.soltoubaixo:
-            pass
 
     def inicializa_observable(self):
         observable = ObservableEventosTeclado()
