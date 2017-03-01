@@ -29,7 +29,7 @@ class ControladorMenu():
         pygame.init()
         self.telamenu = TelaMenu()
         self.controladorjogo = ControladorJogo()
-        self.lopcoes = ["JOGAR", "COMO JOGAR?", "SAIR"]
+        self.lopcoes = ["JOGAR", "CADASTRAR FRASE", "SAIR"]
         self.menu = Menu()
 
     @staticmethod

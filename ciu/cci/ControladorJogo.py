@@ -1,7 +1,5 @@
 import os
 import pygame
-import PIL
-from PIL import Image
 from ciu.cih.EventosTeclado import ObservableEventosTeclado
 from ciu.cih.Tela import Tela
 from cln.cgt.AplJogo import AplJogo
@@ -91,7 +89,6 @@ class ControladorJogo:
             posicaox += largura + 10
 
         self.posicaobotaorelacoes = posicaox
-        self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
 
     def exibir_botao_qtd_relacoes(self, posicaox):
         setarelacoes = self.get_imagem("setarelacoes.gif")
@@ -172,7 +169,6 @@ class ControladorJogo:
         if (not issequencial):
             posicaosaidaseta = iddestino
 
-        self.exibir_seta_relacao(wsize, self.objpalavras[posicaosaidaseta].posicaoxbotao, issequencial)
         self.incrementa_lista_setas(wsize, self.objpalavras[posicaosaidaseta].posicaoxbotao, issequencial)
 
     def verifica_evento_mouse(self):
@@ -206,6 +202,7 @@ class ControladorJogo:
         self.apljogo.qtdrelacaoes = len(self.relacoes)
 
         self.exibir_botoes_palavras()
+        self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
 
         self.existepalavraclicada = False
         self.continua = True
