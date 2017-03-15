@@ -16,11 +16,25 @@ class AplJogo:
 
     def captura_frase(self):
         #TODO: pensar na forma como as frases serao consultadas
-        frase = self.daofrase.consultar_frase(self.idfraseselecionada)
-        listapalavras = frase[0].split()
+        #frase = self.daofrase.consultar_frase(self.idfraseselecionada)
+        frase = "O sol eh amarelo"
+        estrutura = self.gera_estrutura_frase(frase)
 
-        #return listapalavras
-        return ["O", "sol", "eh", "amarelo"]
+        return estrutura
+
+    def gera_estrutura_frase(self, frase):
+        listapalavras = frase.split()
+        estrutura = []
+        valorid = 0
+
+        for palavra in listapalavras:
+            obj = Palavra()
+            obj.set_texto(palavra)
+            obj.set_id(valorid)
+            estrutura.append(obj)
+            valorid += 1
+
+        return estrutura
 
     def captura_relacoes(self):
         relacoes = self.daofrase.consultar_relacoes(self.idfraseselecionada)
@@ -38,20 +52,6 @@ class AplJogo:
         print (cenarios)
 
         return [("100", "img1.png"), ("111", "img2.png")]
-
-    def gera_estrutura_frase(self):
-        estrutura = []
-        frase = self.captura_frase()
-        valorid = 0
-
-        for palavra in frase:
-            obj = Palavra()
-            obj.set_texto(palavra)
-            obj.set_id(valorid)
-            estrutura.append(obj)
-            valorid += 1
-
-        return estrutura
 
 
 

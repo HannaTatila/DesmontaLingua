@@ -6,6 +6,7 @@ from cln.cgt.AplJogo import AplJogo
 from principal.CaminhoRecursos import CaminhoRecursos
 from cln.cdp.Posicao import Posicao
 from cln.cdp.Seta import Seta
+from cln.cdp.Palavra import Palavra
 
 
 __author__ = 'Hanna'
@@ -155,11 +156,12 @@ class ControladorJogo:
         elif pygame.MOUSEBUTTONDOWN and palavraobj.id != self.idpalavraorigem:
             self.restaurar_botao(palavraobj.id)
 
-    def incrementa_lista_setas(self, wsize, posicaox, direcaonormal):
+    def incrementa_lista_setas(self, wsize, posicaox, direcaonormal, relacao):
         seta = Seta()
         seta.set_largura(wsize)
         seta.set_posicaox(posicaox)
         seta.set_direcao_normal(direcaonormal)
+        seta.set_tupla_relacao(relacao)
         self.listasetas.append(seta)
 
     def manipula_seta_relacao(self, idorigem, iddestino):
@@ -169,7 +171,8 @@ class ControladorJogo:
         if (not issequencial):
             posicaosaidaseta = iddestino
 
-        self.incrementa_lista_setas(wsize, self.objpalavras[posicaosaidaseta].posicaoxbotao, issequencial)
+        relacao = (idorigem, iddestino)
+        self.incrementa_lista_setas(wsize, self.objpalavras[posicaosaidaseta].posicaoxbotao, issequencial, relacao)
 
     def verifica_evento_mouse(self):
         for palavraobj in self.objpalavras:
@@ -191,16 +194,18 @@ class ControladorJogo:
                     self.idpalavraorigem = -1
 
 
+    def carrega_dados(self):
+        self.objpalavras = self.apljogo.captura_frase()
+        self.relacoes = self.apljogo.captura_relacoes()
+        self.cenario = self.apljogo.captura_relacao_cenario()
+        self.apljogo.qtdrelacaoes = len(self.relacoes)
+
     def jogo(self):
         observable = self.inicializa_observable()
         #self.exibir_musica("music1.mp3")
         self.apljogo.configuracao()
 
-        self.objpalavras = self.apljogo.gera_estrutura_frase()
-        self.relacoes = self.apljogo.captura_relacoes()
-        self.cenario = self.apljogo.captura_relacao_cenario()
-        self.apljogo.qtdrelacaoes = len(self.relacoes)
-
+        self.carrega_dados()
         self.exibir_botoes_palavras()
         self.exibir_botao_qtd_relacoes(self.posicaobotaorelacoes)
 

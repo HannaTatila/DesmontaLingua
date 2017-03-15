@@ -1,6 +1,8 @@
 from ciu.cci.ControladorCadastroFrase import ControladorCadastroFrase
 from ciu.cci.ControleMenu.EstadoMenu import EstadoMenu
 from ciu.cci.ControladorCadastroRelacoes import ControladorCadastroRelacoes
+from ciu.cci.ControladorCadastroImagens import ControladorCadastroImagens
+
 
 __author__ = 'dell'
 
@@ -27,8 +29,9 @@ class EstadoMenuRanking(EstadoMenu):
             print "RETORNO: "
             print frase
             print listarelacoes
-            #if len(listarelacoes) > 0:
-            #    controladorcadastroimagens = ControladorCadastroImagens()
+            if len(listarelacoes) > 0:
+                controladorcadastroimagens = ControladorCadastroImagens(frase, listarelacoes)
+                controladorcadastroimagens.cadastro_imagens()
 
         else:
             pass
