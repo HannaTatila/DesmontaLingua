@@ -5,19 +5,13 @@ class Palavra:
     def __init__(self):
         self.id = 0
         self.texto = ""
-        self.ativo = False
+        #self.ativo = False
         self.imagemrect = ""
-        self.botao = ""
+        #self.botao = ""
         self.posicaoxbotao = 0
 
     def set_texto(self, palavra):
         self.texto = palavra
-
-    def set_botao(self, botao):
-        self.botao = botao
-
-    def set_ativo(self, ativo):
-        self.ativo = ativo
 
     def set_imagemrect(self, img):
         self.imagemrect = img

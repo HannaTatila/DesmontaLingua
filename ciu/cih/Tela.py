@@ -26,6 +26,8 @@ class Tela(object):
         text = fonte.render(texto, True, self.branco)
         self.telajogo.blit(text, (posicao.eixox, posicao.eixoy))
 
+    def desenha_retangulo(self, cor, dimensoes):
+        pygame.draw.rect(self.telajogo, cor, dimensoes, 2)
 
     @staticmethod
     def exibe_musica(diretoriomusica, nomemusica):

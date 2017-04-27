@@ -43,11 +43,8 @@ class ControladorJogo:
 
     def redimensionar_imagem(self, wsize):
         hsize = 75
-        img = self.get_imagem("relacao.png") #os.path.join(CaminhoRecursos.caminho_imagens(), "relacao.png")
+        img = self.get_imagem("relacao.png")
         img = pygame.transform.scale(img, (wsize + 30, hsize))
-        #img = PIL.Image.open(caminhoimagem)
-        #img = pygame.image.fromstring(img.tobytes(), img.size, img.mode)
-        # img.thumbnail((wsize + 20, hsize), Image.ANTIALIAS)
         return img
 
     def exibir_seta_relacao(self, wsize, posicaox, direcaonormal):
@@ -80,7 +77,6 @@ class ControladorJogo:
             largura = self.calcula_largura_botao(palavra.texto) #TODO: pensar melhor nesse metodo repetido aqui
             botao = self.cria_botao(palavra.texto, (218, 165, 32)) #cor goldenrod
 
-            palavra.set_botao(botao)
             palavra.posicaoxbotao = posicaox
             imagemrect = botao.get_rect().move(posicaox, self.posicaoy)
             palavra.set_imagemrect(imagemrect)
@@ -135,11 +131,10 @@ class ControladorJogo:
             estado += str(relacao[2])
         return estado
 
+    # TODO: conferir todas as possibilidades que essa logica alcanca
     def altera_cenario(self):
         estado = self.busca_estado_relacoes()
         for cenario in self.cenario:
-            print("Cenarioo")
-            print cenario
             valido = True
             for id in range(len(estado)):
                 if cenario[0][id] == "1" and estado[id] == "0":
@@ -157,11 +152,7 @@ class ControladorJogo:
             self.restaurar_botao(palavraobj.id)
 
     def incrementa_lista_setas(self, wsize, posicaox, direcaonormal, relacao):
-        seta = Seta()
-        seta.set_largura(wsize)
-        seta.set_posicaox(posicaox)
-        seta.set_direcao_normal(direcaonormal)
-        seta.set_tupla_relacao(relacao)
+        seta = Seta(posicaox, wsize, direcaonormal, relacao)
         self.listasetas.append(seta)
 
     def manipula_seta_relacao(self, idorigem, iddestino):
@@ -184,7 +175,6 @@ class ControladorJogo:
                     self.existepalavraclicada = True
                     self.destacar_botao_clicado(self.idpalavraorigem)
                 else:
-                    #print("Relacao entre palavra" + str(self.idpalavraorigem) + " e " + str(palavraobj.id) + " !")
                     self.existepalavraclicada = False
                     self.restaurar_botao(self.idpalavraorigem)
                     if self.verifica_relacao(palavraobj.id):
