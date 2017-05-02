@@ -33,8 +33,6 @@ class EstadoMenuRanking(EstadoMenu):
                     aplcadastro = AplCadastro()
                     aplcadastro.cadastrar_dados(frase, listarelacoes, listacenariosimagens)
 
-
-
         #self.aplcadastro.cadastrar_dados()
         #self.menu.aguarda_confirmacao()
 
