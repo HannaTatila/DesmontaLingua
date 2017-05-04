@@ -16,9 +16,11 @@ class AplJogo:
 
     def captura_frase(self):
         #TODO: pensar na forma como as frases serao consultadas
-        #frase = self.daofrase.consultar_frase(self.idfraseselecionada)
-        frase = "O sol eh amarelo"
-        estrutura = self.gera_estrutura_frase(frase)
+        frase = self.daofrase.consultar_frase(self.idfraseselecionada)
+        print "Frase consultada no banco:"
+        print frase[0]
+        #frase = "O sol eh amarelo"
+        estrutura = self.gera_estrutura_frase(frase[0])
 
         return estrutura
 
@@ -43,15 +45,18 @@ class AplJogo:
             novatupla = relacoes[id] + (0,)
             relacoes[id] = novatupla
 
-        #return relacoes
-        return [(0, 1, 0), (1, 2, 0), (3, 2, 0)]
+        print "Relacoes consultadas no banco: "
+        print relacoes
+        return relacoes
+        #return [(0, 1, 0), (1, 2, 0), (3, 2, 0)]
 
     def captura_relacao_cenario(self):
         cenarios = self.daofrase.consultar_cenarios(self.idfraseselecionada)
-        print("Cenariooooooooooooooos: ")
-        print (cenarios)
+        print "Cenarios consultados no banco: "
+        print cenarios
 
-        return [("100", "img1.png"), ("111", "img2.png")]
+        return cenarios
+        #return [("100", "img1.png"), ("111", "img2.png")]
 
 
 

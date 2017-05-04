@@ -1,11 +1,11 @@
 import pygame
 import sys
-from cln.cdp.Palavra import Palavra
-from cln.cgt.AplJogo import AplJogo
+
 from ciu.cci.ControladorJogo import ControladorJogo
 from pygame.constants import QUIT
-from ciu.cih.Tela import Tela
 from cln.cdp.Posicao import Posicao
+from cln.cgt.AplSuporteSintaxe import AplSuporteSintaxe
+
 
 class ControladorCadastroRelacoes(ControladorJogo):
     POSICAOX_BOTAO_CADASTRAR_FRASE = 350
@@ -78,6 +78,8 @@ class ControladorCadastroRelacoes(ControladorJogo):
         self.apljogo.configuracao()
         self.objpalavras = self.apljogo.gera_estrutura_frase(self.frase)
         self.exibir_botoes_palavras()
+
+        #ctrlsuportesintaxe = AplSuporteSintaxe()
 
         self.existepalavraclicada = False
         continua = True

@@ -6,7 +6,7 @@ _author__ = 'Hanna'
 class DAOFrase:
     def __init__(self):
         try:
-            self.conn = sqlite3.connect("Desmontalingua2.db")  # conexao banco
+            self.conn = sqlite3.connect("Desmontalingua.db")  # conexao banco
             self.cursor = self.conn.cursor()
             self.criar_tabelas()
         except sqlite3.Error:
@@ -26,10 +26,11 @@ class DAOFrase:
             self.conn.commit()  # salva dados no banco
 
             self.cursor.execute("SELECT * FROM frase")
-            print "Tabela frase"
             print self.cursor.fetchall()
-            print len(self.cursor.fetchall())
-            return len(self.cursor.fetchall())
+
+            self.cursor.execute("SELECT COUNT(*) FROM frase")
+            idfrase = self.cursor.fetchall()[0][0]
+            return idfrase
 
 
         except sqlite3.Error as oq:
@@ -42,11 +43,6 @@ class DAOFrase:
             self.cursor.executemany("INSERT INTO relacao (origem, destino, frase_id) VALUES (?,?,?)", listarelacoes)
             self.conn.commit()
 
-            self.cursor.execute("SELECT * FROM relacao")
-            print "Tabela relacao"
-            print self.cursor.fetchall()
-
-
         except sqlite3.Error as oq:
             print(oq)
             print("Erro ao inserir relacoes.")
@@ -56,14 +52,36 @@ class DAOFrase:
             self.cursor.executemany("INSERT INTO cenario (estado, imagem, frase_id) VALUES (?,?,?)", listacenarios)
             self.conn.commit()
 
-            self.cursor.execute("SELECT * FROM cenario")
-            print "Tabela cenario"
-            print self.cursor.fetchall()
-
-
         except sqlite3.Error as oq:
             print(oq)
             print("Erro ao inserir cenarios.")
+
+    def consultar_frase(self, idfrase):
+        try:
+            self.cursor.execute("SELECT frase FROM frase WHERE id = (?)", (idfrase,))
+            return self.cursor.fetchone()
+
+        except sqlite3.Error:
+            print("Erro ao consultar o banco!")
+
+    def consultar_relacoes(self, idfrase):
+        try:
+            self.cursor.execute("SELECT origem, destino FROM relacao WHERE frase_id = (?)", (idfrase,))
+            return self.cursor.fetchall()
+
+        except sqlite3.Error:
+            print("Erro ao consultar o banco!")
+
+    def consultar_cenarios(self, idfrase):
+        try:
+            self.cursor.execute("SELECT estado, imagem FROM cenario WHERE frase_id = (?)", (idfrase,))
+            return self.cursor.fetchall()
+
+        except sqlite3.Error:
+            print("Erro ao consultar o banco!")
+
+
+
 
     """
     def inserir_dados(self):
@@ -90,30 +108,6 @@ class DAOFrase:
             print("Erro ao inserir dados.")
 
     """
-
-    def consultar_frase(self, idfrase):
-        try:
-            self.cursor.execute("SELECT frase FROM frase WHERE id = (?)", (idfrase,))
-            return self.cursor.fetchone()
-
-        except sqlite3.Error:
-            print("Erro ao consultar o banco!")
-
-    def consultar_relacoes(self, idfrase):
-        try:
-            self.cursor.execute("SELECT origem, destino FROM relacao WHERE frase_id = (?)", (idfrase,))
-            return self.cursor.fetchall()
-
-        except sqlite3.Error:
-            print("Erro ao consultar o banco!")
-
-    def consultar_cenarios(self, idfrase):
-        try:
-            self.cursor.execute("SELECT estado, imagem FROM cenario WHERE frase_id = (?)", (idfrase,))
-            return self.cursor.fetchall()
-
-        except sqlite3.Error:
-            print("Erro ao consultar o banco!")
 
     """
     def validar_login(self):

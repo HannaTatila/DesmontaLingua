@@ -1,5 +1,7 @@
 import os
 import pygame
+import sys
+import unicodedata
 from ciu.cih.EventosTeclado import ObservableEventosTeclado
 from ciu.cih.Tela import Tela
 from cln.cgt.AplJogo import AplJogo
@@ -10,6 +12,9 @@ from cln.cdp.Palavra import Palavra
 
 
 __author__ = 'Hanna'
+
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 class ControladorJogo:
