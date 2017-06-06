@@ -1,4 +1,5 @@
 from ciu.cci.ControladorCadastroFrase import ControladorCadastroFrase
+from ciu.cci.ControladorDefineSintagma import ControladorDefineSintagma
 from ciu.cci.ControleMenu.EstadoMenu import EstadoMenu
 from ciu.cci.ControladorCadastroRelacoes import ControladorCadastroRelacoes
 from ciu.cci.ControladorCadastroImagens import ControladorCadastroImagens
@@ -23,6 +24,10 @@ class EstadoMenuRanking(EstadoMenu):
 
         frase = controladorcadastrofrase.cadastro_frase()
         if frase != "":
+            controladordefinesintagma = ControladorDefineSintagma(frase)
+            listasintagmas = controladordefinesintagma.define_sintagmas()
+            print "Sintagmas definidos:"
+            print listasintagmas
             controladorcadastrorelacoes = ControladorCadastroRelacoes(frase)
             listarelacoes = controladorcadastrorelacoes.cadastro_relacoes()
             if len(listarelacoes) > 0:

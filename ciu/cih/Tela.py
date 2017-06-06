@@ -26,6 +26,11 @@ class Tela(object):
         text = fonte.render(texto, True, self.branco)
         self.telajogo.blit(text, (posicao.eixox, posicao.eixoy))
 
+    def exibe_texto_preto(self, texto, tamanhofonte, posicao):
+        fonte = pygame.font.SysFont("Agency FB", tamanhofonte, False, False)
+        text = fonte.render(texto, True, self.preto)
+        self.telajogo.blit(text, (posicao.eixox, posicao.eixoy))
+
     def desenha_retangulo(self, cor, dimensoes):
         pygame.draw.rect(self.telajogo, cor, dimensoes, 2)
 

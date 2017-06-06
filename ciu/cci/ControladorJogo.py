@@ -151,9 +151,9 @@ class ControladorJogo:
                 self.telajogo.exibe_imagem(imagem, Posicao(0, 0))
 
     def controla_cor_botao_visitado(self, palavraobj):
-        if palavraobj.foi_detectada() and palavraobj.id != self.idpalavraorigem:
+        if palavraobj.foi_detectada() and palavraobj.id != self.idpalavraorigem and not palavraobj.ativo:
             self.destacar_botao(palavraobj.id)
-        elif pygame.MOUSEBUTTONDOWN and palavraobj.id != self.idpalavraorigem:
+        elif pygame.MOUSEBUTTONDOWN and palavraobj.id != self.idpalavraorigem and not palavraobj.ativo:
             self.restaurar_botao(palavraobj.id)
 
     def incrementa_lista_setas(self, wsize, posicaox, direcaonormal, relacao):

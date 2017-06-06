@@ -5,10 +5,9 @@ class Palavra:
     def __init__(self):
         self.id = 0
         self.texto = ""
-        #self.ativo = False
         self.imagemrect = ""
-        #self.botao = ""
         self.posicaoxbotao = 0
+        self.ativo = False
 
     def set_texto(self, palavra):
         self.texto = palavra

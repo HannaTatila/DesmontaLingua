@@ -4,7 +4,7 @@ import sys
 from ciu.cci.ControladorJogo import ControladorJogo
 from pygame.constants import QUIT
 from cln.cdp.Posicao import Posicao
-from cln.cgt.AplSuporteSintaxe import AplSuporteSintaxe
+#from cln.cgt.AplSuporteSintaxe import AplSuporteSintaxe
 
 
 class ControladorCadastroRelacoes(ControladorJogo):
