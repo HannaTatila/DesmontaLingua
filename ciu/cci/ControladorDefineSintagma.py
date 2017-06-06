@@ -17,6 +17,10 @@ class ControladorDefineSintagma (ControladorJogo):
     POSICAOY_BOTAO_MARCAR_SINTAGMA = 250
     POSICAOX_BOTAO_CADASTRAR_SINTAGMAS = 350
     POSICAOY_BOTAO_CADASTRAR_SINTAGMAS = 450
+    POSICAOX_CLASSE_GRAMATICAL = 250
+    POSICAOY_CLASSE_GRAMATICAL = 250
+    INCREMENTO_POSICAOY_CLASSE_GRAMATICAL = 80
+
 
     def __init__(self, frase):
         ControladorJogo.__init__(self)
@@ -55,12 +59,12 @@ class ControladorDefineSintagma (ControladorJogo):
         self.listaclasses = ["Substantivo", "Verbo", "Adverbio", "Adjetivo", "Pronome Adjetivo", "Numeral", "Artigo"]
         self.listarectclasses = []
 
-        posicaoy = 250
-        posicaox = 250
+        posicaoy = self.POSICAOY_CLASSE_GRAMATICAL
+        posicaox = self.POSICAOX_CLASSE_GRAMATICAL
         cont = 0
         for classe in self.listaclasses:
             largura = self.calcula_largura_botao(classe)
-            botao = self.cria_botao(classe, (220,220,220))
+            botao = self.cria_botao(classe, (220,220,220)) #definir a melhor cor
             imagemrectbotao = botao.get_rect().move(posicaox, posicaoy)
             self.listarectclasses.append(imagemrectbotao)
             self.imprimir_botao_classes(classe, botao, posicaox, posicaoy)
@@ -68,8 +72,8 @@ class ControladorDefineSintagma (ControladorJogo):
 
             cont += 1
             if cont == 4:
-                posicaoy = 330
-                posicaox = 250
+                posicaoy = self.POSICAOY_CLASSE_GRAMATICAL + self.INCREMENTO_POSICAOY_CLASSE_GRAMATICAL
+                posicaox = self.POSICAOX_CLASSE_GRAMATICAL
 
         pygame.display.flip()
 
