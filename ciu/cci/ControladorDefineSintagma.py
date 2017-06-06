@@ -30,10 +30,6 @@ class ControladorDefineSintagma (ControladorJogo):
         self.posicaoy = (self.telajogo.tamanhotelay / 4)
         self.listarelacoes = []
 
-    """@staticmethod
-    def get_imagem(nomeimagem):
-        return pygame.image.load(os.path.join(CaminhoRecursos.caminho_imagens(), nomeimagem))
-    """
 
     def inicializa_tela(self):
         self.renderizar_fundo()
@@ -72,8 +68,9 @@ class ControladorDefineSintagma (ControladorJogo):
 
             cont += 1
             if cont == 4:
-                posicaoy = self.POSICAOY_CLASSE_GRAMATICAL + self.INCREMENTO_POSICAOY_CLASSE_GRAMATICAL
+                posicaoy = posicaoy + self.INCREMENTO_POSICAOY_CLASSE_GRAMATICAL
                 posicaox = self.POSICAOX_CLASSE_GRAMATICAL
+                cont = 0
 
         pygame.display.flip()
 
